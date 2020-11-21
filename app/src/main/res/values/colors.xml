@@ -2,4 +2,15 @@
 <resources>
     <color name="background">#000000</color>
     <color name="digital_text">#ffffff</color>
+    <color name="matte_green">#03fc84</color>
+    <color name="matte_red">#ef5350</color>
+    <color name="matte_purple">#ee98fb</color>
+    <color name="matte_yellow">#ffe082</color>
+    <color name="matte_blue">#29b6f6</color>
+    <color name="green_darker">#43a047</color>
+    <color name="light_green">#b2dfdb</color>
+    <color name="light_blue">#90caf9</color>
+    <color name="matte_orange">#ffcc80</color>
+
+
 </resources>

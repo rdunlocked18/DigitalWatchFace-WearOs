@@ -10,6 +10,7 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
 import android.graphics.Typeface;
+import android.net.wifi.p2p.WifiP2pGroup;
 import android.os.BatteryManager;
 import android.os.Build;
 import android.os.Bundle;
@@ -45,7 +46,7 @@ import java.util.concurrent.TimeUnit;
  */
 public class DigitalFace extends CanvasWatchFaceService {
     private static final Typeface NORMAL_TYPEFACE =
-            Typeface.create(Typeface.MONOSPACE,200,true);
+            Typeface.create(Typeface.MONOSPACE, 200, true);
 
     /**
      * Update rate in milliseconds for interactive mode. Defaults to one second
@@ -130,7 +131,9 @@ public class DigitalFace extends CanvasWatchFaceService {
             mTextPaint.setTypeface(ResourcesCompat.getFont(getBaseContext(), R.font.mallicotscript));
             mTextPaint.setAntiAlias(true);
             mTextPaint.setColor(
-                    ContextCompat.getColor(getApplicationContext(), R.color.digital_text));
+                    ContextCompat.getColor(getApplicationContext(), R.color.matte_yellow));
+
+
         }
 
         @Override
@@ -210,6 +213,8 @@ public class DigitalFace extends CanvasWatchFaceService {
             mAmbient = inAmbientMode;
             if (mLowBitAmbient) {
                 mTextPaint.setAntiAlias(!inAmbientMode);
+                mTextPaint.setColor(
+                        ContextCompat.getColor(getApplicationContext(), R.color.digital_text));
             }
 
             // Whether the timer should be running depends on whether we"re visible (as well as
@@ -246,8 +251,12 @@ public class DigitalFace extends CanvasWatchFaceService {
             if (isInAmbientMode()) {
                 Toast.makeText(DigitalFace.this, "Screen off", Toast.LENGTH_SHORT).show();
                 canvas.drawColor(Color.BLACK);
+                mTextPaint.setColor(
+                        ContextCompat.getColor(getApplicationContext(), R.color.digital_text));
             } else {
                 canvas.drawRect(0, 0, bounds.width(), bounds.height(), mBackgroundPaint);
+                mTextPaint.setColor(
+                        ContextCompat.getColor(getApplicationContext(), R.color.matte_yellow));
             }
 
             // Draw H:MM in ambient mode or H:MM:SS in interactive mode.
@@ -255,18 +264,17 @@ public class DigitalFace extends CanvasWatchFaceService {
             mCalendar.setTimeInMillis(now);
 
             String text;
-            if(mAmbient){
-               text =  String.format("%d:%02d", mCalendar.get(Calendar.HOUR),
+            if (mAmbient) {
+                text = String.format("%d:%02d", mCalendar.get(Calendar.HOUR),
                         mCalendar.get(Calendar.MINUTE));
-            }else {
+            } else {
                 text = String.format("%d:%02d:%02d", mCalendar.get(Calendar.HOUR),
                         mCalendar.get(Calendar.MINUTE), mCalendar.get(Calendar.SECOND));
             }
 
 
-
             canvas.drawText("Rohit", mXOffset, mYOffset, mTextPaint);
-           // canvas.drawText("rohit", mXOffset, mYOffset, mTextPaint);
+            // canvas.drawText("rohit", mXOffset, mYOffset, mTextPaint);
 
         }
 
@@ -302,7 +310,7 @@ public class DigitalFace extends CanvasWatchFaceService {
             }
         }
 
-        public  int getBatteryPercentage(Context context) {
+        public int getBatteryPercentage(Context context) {
 
             if (Build.VERSION.SDK_INT >= 21) {
 
