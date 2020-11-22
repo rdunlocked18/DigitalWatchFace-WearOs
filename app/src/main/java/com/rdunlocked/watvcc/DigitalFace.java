@@ -1,5 +1,6 @@
 package com.rdunlocked.watvcc;
 
+import android.annotation.SuppressLint;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -29,6 +30,7 @@ import android.widget.Toast;
 import com.vstechlab.easyfonts.EasyFonts;
 
 import java.lang.ref.WeakReference;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.TimeZone;
 import java.util.concurrent.TimeUnit;
@@ -100,6 +102,12 @@ public class DigitalFace extends CanvasWatchFaceService {
         private float mYOffset;
         private Paint mBackgroundPaint;
         private Paint mTextPaint;
+        private Paint mHoursPaint;
+        private Paint mMinsPaint;
+        private float mXOffsetHours;
+        private float mYOffsetHours;
+        private float mXOffsetMins;
+        private float mYOffsetMins;
         /**
          * Whether the display supports fewer bits for each color in ambient mode. When true, we
          * disable anti-aliasing in ambient mode.
@@ -121,6 +129,7 @@ public class DigitalFace extends CanvasWatchFaceService {
             Resources resources = DigitalFace.this.getResources();
             mYOffset = resources.getDimension(R.dimen.digital_y_offset);
 
+
             // Initializes background.
             mBackgroundPaint = new Paint();
             mBackgroundPaint.setColor(
@@ -128,11 +137,22 @@ public class DigitalFace extends CanvasWatchFaceService {
 
             // Initializes Watch Face.
             mTextPaint = new Paint();
-            mTextPaint.setTypeface(ResourcesCompat.getFont(getBaseContext(), R.font.mallicotscript));
+            mTextPaint.setTypeface(ResourcesCompat.getFont(getBaseContext(), R.font.kittens));
             mTextPaint.setAntiAlias(true);
             mTextPaint.setColor(
                     ContextCompat.getColor(getApplicationContext(), R.color.matte_yellow));
 
+            mHoursPaint = new Paint();
+            mHoursPaint.setTypeface(ResourcesCompat.getFont(getBaseContext(), R.font.kittens));
+            mHoursPaint.setAntiAlias(true);
+            mHoursPaint.setColor(
+                    ContextCompat.getColor(getApplicationContext(), R.color.matte_blue));
+
+            mMinsPaint = new Paint();
+            mMinsPaint.setTypeface(ResourcesCompat.getFont(getBaseContext(), R.font.kittens));
+            mMinsPaint.setAntiAlias(true);
+            mMinsPaint.setColor(
+                    ContextCompat.getColor(getApplicationContext(), R.color.matte_red));
 
         }
 
@@ -185,12 +205,28 @@ public class DigitalFace extends CanvasWatchFaceService {
             // Load resources that have alternate values for round watches.
             Resources resources = DigitalFace.this.getResources();
             boolean isRound = insets.isRound();
+            // for singular text
             mXOffset = resources.getDimension(isRound
                     ? R.dimen.digital_x_offset_round : R.dimen.digital_x_offset);
             float textSize = resources.getDimension(isRound
                     ? R.dimen.digital_text_size_round : R.dimen.digital_text_size);
 
-            mTextPaint.setTextSize(textSize);
+            //for Hours Digits
+            mXOffsetHours = resources.getDimension(isRound
+                    ? R.dimen.digital_x_offset_hours_round : R.dimen.digital_x_offset_hours);
+            float hoursTSize = resources.getDimension(isRound
+                    ? R.dimen.digital_text_size_hours_round : R.dimen.digital_text_size_hours);
+
+            //for Mins Digits
+            mXOffsetMins = resources.getDimension(isRound
+                    ? R.dimen.digital_x_offset_mins : R.dimen.digital_x_offset);
+            float minsTSize = resources.getDimension(isRound
+                    ? R.dimen.digital_text_size_mins_round : R.dimen.digital_text_size_mins);
+
+//            set size of texts
+            mTextPaint.setTextSize(textSize-20);
+            mHoursPaint.setTextSize(hoursTSize+60);
+            mMinsPaint.setTextSize(minsTSize+60);
         }
 
         @Override
@@ -245,13 +281,18 @@ public class DigitalFace extends CanvasWatchFaceService {
             invalidate();
         }
 
+        @SuppressLint("DefaultLocale")
         @Override
         public void onDraw(Canvas canvas, Rect bounds) {
             // Draw the background.
             if (isInAmbientMode()) {
-                Toast.makeText(DigitalFace.this, "Screen off", Toast.LENGTH_SHORT).show();
+               // Toast.makeText(DigitalFace.this, "Screen off", Toast.LENGTH_SHORT).show();
                 canvas.drawColor(Color.BLACK);
                 mTextPaint.setColor(
+                        ContextCompat.getColor(getApplicationContext(), R.color.digital_text));
+                mHoursPaint.setColor(
+                        ContextCompat.getColor(getApplicationContext(), R.color.digital_text));
+                mMinsPaint.setColor(
                         ContextCompat.getColor(getApplicationContext(), R.color.digital_text));
             } else {
                 canvas.drawRect(0, 0, bounds.width(), bounds.height(), mBackgroundPaint);
@@ -264,18 +305,15 @@ public class DigitalFace extends CanvasWatchFaceService {
             mCalendar.setTimeInMillis(now);
 
             String text;
-            if (mAmbient) {
-                text = String.format("%d:%02d", mCalendar.get(Calendar.HOUR),
-                        mCalendar.get(Calendar.MINUTE));
-            } else {
-                text = String.format("%d:%02d:%02d", mCalendar.get(Calendar.HOUR),
-                        mCalendar.get(Calendar.MINUTE), mCalendar.get(Calendar.SECOND));
-            }
+            String hoursGet = String.format("%02d",mCalendar.get(Calendar.HOUR));
+            String minsGet = String.format("%02d",mCalendar.get(Calendar.MINUTE));
 
 
-            canvas.drawText("Rohit", mXOffset, mYOffset, mTextPaint);
-            // canvas.drawText("rohit", mXOffset, mYOffset, mTextPaint);
 
+            canvas.drawText("It's", mXOffset +20, mYOffset+110, mTextPaint);
+            canvas.drawText(hoursGet, mXOffsetHours+180 , mYOffsetHours + 220, mHoursPaint);
+            canvas.drawText(minsGet, mXOffsetMins+180 , mYOffsetMins + 370, mMinsPaint);
+           // canvas.drawText("rdunlocked18", mXOffsetMins+190 , mYOffsetMins + 370, mMinsPaint);
         }
 
         /**
@@ -330,5 +368,6 @@ public class DigitalFace extends CanvasWatchFaceService {
                 return (int) (batteryPct * 100);
             }
         }
+
     }
 }
