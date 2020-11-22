@@ -1,6 +1,5 @@
 <resources>
-    <string name="app_name">Watvcc</string>
+    <string name="app_name">Kitten</string>
     <string name="message">Watch face tapped</string>
-    <string name="my_analog_name">My Analog</string>
-    <string name="my_digital_name">My Digital</string>
+    <string name="my_digital_name">Kitten Digital</string>
 </resources>
