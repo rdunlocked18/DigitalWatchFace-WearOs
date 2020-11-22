@@ -298,6 +298,10 @@ public class DigitalFace extends CanvasWatchFaceService {
                 canvas.drawRect(0, 0, bounds.width(), bounds.height(), mBackgroundPaint);
                 mTextPaint.setColor(
                         ContextCompat.getColor(getApplicationContext(), R.color.matte_yellow));
+                mHoursPaint.setColor(
+                        ContextCompat.getColor(getApplicationContext(), R.color.matte_blue));
+                mMinsPaint.setColor(
+                        ContextCompat.getColor(getApplicationContext(), R.color.matte_red));
             }
 
             // Draw H:MM in ambient mode or H:MM:SS in interactive mode.
